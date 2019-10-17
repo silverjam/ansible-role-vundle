@@ -7,19 +7,19 @@
   when: ansible_os_family == "Debian"
 
 - name: Make Vim directory
-  become: false
+  become_user: "{{ vundle_user }}"
   file:
     path: "{{ vundle_config_dir }}"
     state: directory
 
 - name: Make Vim bundle directory
-  become: false
+  become_user: "{{ vundle_user }}"
   file:
     path: "{{ vundle_config_dir }}/bundle"
     state: directory
 
 - name: Clone vundle
-  become: false
+  become_user: "{{ vundle_user }}"
   git:
     repo: "{{ vundle_repo }}"
     dest: "{{ vundle_config_dir }}/bundle/Vundle.vim"
@@ -27,7 +27,11 @@
     version: "master"
 
 - name: Install Vim plugins
-  become: "{{ vundle_user }}"
-  command: "vim +PluginInstall +qall"
+  become_user: "{{ vundle_user }}"
+  shell: vim -E -s -u ~/.vimrc '+silent! PluginInstall' +qall
   tags:
     - skip_ansible_lint
+
+- name: Run PluginClean
+  become_user: "{{ vundle_user }}"
+  shell: vim -E -s -u ~/.vimrc '+PluginClean!' +qall
