@@ -28,10 +28,10 @@
 
 - name: Install Vim plugins
   become_user: "{{ vundle_user }}"
-  shell: vim -E -s -u ~/.vimrc '+silent! PluginInstall' +qall
+  shell: vim -E -s -u ~/.vimrc '+set shell=bash' '+PluginInstall' +qall
   tags:
     - skip_ansible_lint
 
 - name: Run PluginClean
   become_user: "{{ vundle_user }}"
-  shell: vim -E -s -u ~/.vimrc '+PluginClean!' +qall
+  shell: vim -E -s -u ~/.vimrc '+set shell=bash' '+PluginClean!' +qall
